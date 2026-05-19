@@ -26,88 +26,135 @@
         }
     </style>
 </head>
-<body class="min-h-screen p-4 md:p-8 text-gray-800">
+<body class="min-h-screen p-4 md:p-8 text-gray-800 flex items-center justify-center">
 
-    <div class="max-w-4xl mx-auto space-y-6">
+    <div class="max-w-4xl w-full mx-auto space-y-6">
         
-        <!-- Header -->
-        <div class="text-center space-y-2 mb-6 md:mb-8 mt-4 md:mt-0">
-            <h1 class="text-2xl md:text-4xl font-extrabold text-amber-600 tracking-tight">
-                🌻 Panel Undangan Digital 🌻
-            </h1>
-            <p class="text-amber-800/70 font-medium text-sm md:text-base">Lina & Rizal</p>
-        </div>
-        
-        <!-- Bagian Atas: Pengaturan & Template -->
-        <div class="bg-white/80 backdrop-blur-md p-5 md:p-8 rounded-2xl shadow-xl border border-amber-100 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div id="welcomeScreen" class="max-w-md mx-auto text-center bg-white/80 backdrop-blur-md p-8 rounded-3xl shadow-xl border border-amber-100 space-y-6">
+            <div class="space-y-2">
+                <span class="text-5xl">🌻</span>
+                <h1 class="text-2xl md:text-3xl font-extrabold text-amber-600 tracking-tight">
+                    Panel Undangan
+                </h1>
+                <p class="text-amber-800/70 font-medium text-sm">Lina & Rizal</p>
+            </div>
             
-            <div class="space-y-4">
-                <h2 class="text-lg md:text-xl font-bold text-amber-700 flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"/>
-                        <path d="M3 5.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 8a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 8zm0 2.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5z"/>
+            <p class="text-sm text-gray-600">Silakan pilih metode input daftar tamu undangan pernikahan Anda:</p>
+            
+            <div class="flex flex-col gap-3 pt-2">
+                <button onclick="setMode('manual')" class="w-full p-4 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-2xl shadow-md transition transform hover:scale-[1.02] flex items-center justify-center gap-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-keyboard" viewBox="0 0 16 16">
+                        <path d="M14 5a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h12zM2 4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H2z"/>
+                        <path d="M2.5 7a.5.5 0 0 1 .5-.5h1  a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V7zm2 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H5a.5.5 0 0 1-.5-.5V7zm2 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H7a.5.5 0 0 1-.5-.5V7zm2 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H9a.5.5 0 0 1-.5-.5V7zm2 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5V7zM2 9.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H2.5a.5.5 0 0 1-.5-.5v-1zm3 0a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H5a.5.5 0 0 1-.5-.5v-1zm8 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z"/>
                     </svg>
-                    Data Tamu
-                </h2>
+                    Input Manual Cepat
+                </button>
                 
-                <div class="border-2 border-dashed border-amber-300 rounded-xl p-5 text-center bg-amber-50/50 hover:bg-amber-100/50 transition duration-300">
-                    <label class="block cursor-pointer">
-                        <span class="block text-sm font-semibold text-amber-800 mb-2">Upload File CSV Tamu</span>
-                        <input type="file" id="csvFile" accept=".csv" class="hidden" onchange="handleFileSelect(event)">
-                        <span id="fileNameDisplay" class="inline-block px-4 py-2 bg-white text-amber-600 text-xs font-bold rounded-lg shadow-sm border border-amber-200 hover:shadow-md transition">
-                            Pilih File .csv
-                        </span>
-                    </label>
-                    <p class="text-[11px] text-amber-700 mt-3">Format kolom wajib: <strong class="text-amber-900">Nama, Nomor HP</strong></p>
+                <button onclick="setMode('csv')" class="w-full p-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl shadow-md transition transform hover:scale-[1.02] flex items-center justify-center gap-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-file-earmark-spreadsheet" viewBox="0 0 16 16">
+                        <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V9H3V2a1 1 0 0 1 1-1h5.5v2zM3 10h10v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z"/>
+                        <path d="M4 11h2v1H4v-1zm3 0h2v1H7v-1zm3 0h2v1h-2v-1zm-6 2h2v1H4v-1zm3 0h2v1H7v-1zm3 0h2v1h-2v-1z"/>
+                    </svg>
+                    Upload File CSV (Massal)
+                </button>
+            </div>
+        </div>
+
+        <div id="mainWorkspace" class="hidden space-y-6">
+            
+            <div class="flex flex-col sm:flex-row justify-between items-center bg-white/60 backdrop-blur-sm p-4 rounded-2xl border border-amber-100 gap-4">
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl">🌻</span>
+                    <div>
+                        <h2 class="font-bold text-amber-800 text-lg">Panel Utama Undangan</h2>
+                        <p class="text-xs text-amber-700/60 font-medium">Lina & Rizal</p>
+                    </div>
+                </div>
+                <button onclick="resetToWelcome()" class="text-xs font-bold text-amber-700 bg-amber-100 hover:bg-amber-200 px-4 py-2 rounded-xl transition flex items-center gap-1.5">
+                    ↩ Ganti Metode Input
+                </button>
+            </div>
+            
+            <div class="bg-white/80 backdrop-blur-md p-5 md:p-8 rounded-2xl shadow-xl border border-amber-100 grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <div class="space-y-4">
+                    
+                    <div id="manualInputFields" class="hidden space-y-4">
+                        <h2 class="text-lg font-bold text-amber-700 flex items-center gap-2">✍ Input Manual</h2>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-600 mb-1">Nama Penerima</label>
+                            <input type="text" id="manualGuestName" placeholder="Contoh: Budi Santoso" class="w-full px-4 py-2 border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400 text-sm bg-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-600 mb-1">Nomor WhatsApp</label>
+                            <input type="number" id="manualGuestPhone" placeholder="Contoh: 0812345678" class="w-full px-4 py-2 border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400 text-sm bg-white">
+                        </div>
+                        <button onclick="addManualGuest()" class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl shadow-sm transition text-sm">
+                            ＋ Tambahkan ke Antrean
+                        </button>
+                    </div>
+                    
+                    <div id="csvInputFields" class="hidden space-y-4">
+                        <h2 class="text-lg font-bold text-emerald-700 flex items-center gap-2">📂 Upload CSV</h2>
+                        <div class="border-2 border-dashed border-amber-300 rounded-xl p-5 text-center bg-amber-50/50 hover:bg-amber-100/50 transition duration-300">
+                            <label class="block cursor-pointer">
+                                <span class="block text-xs font-semibold text-amber-800 mb-2">Pilih dokumen tamu (.csv)</span>
+                                <input type="file" id="csvFile" accept=".csv" class="hidden" onchange="handleFileSelect(event)">
+                                <span id="fileNameDisplay" class="inline-block px-4 py-2 bg-white text-amber-600 text-xs font-bold rounded-lg shadow-sm border border-amber-200 hover:shadow-md transition">
+                                    Browse File
+                                </span>
+                            </label>
+                            <p class="text-[10px] text-amber-700 mt-3">Format judul kolom wajib: <strong class="text-amber-900">Nama, Nomor HP</strong></p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-sm font-bold text-amber-700">Template Pesan</label>
+                    <textarea id="messageTemplate" rows="8" class="w-full px-4 py-3 border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400 text-xs shadow-sm bg-white/90 text-gray-700 transition resize-none"></textarea>
+                </div>
+
+            </div>
+
+            <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl border border-amber-100 overflow-hidden">
+                <div class="p-4 md:p-6 border-b border-amber-100 flex justify-between items-center bg-gradient-to-r from-amber-50 to-white">
+                    <h3 class="text-base md:text-lg font-bold text-amber-800">Daftar Antrean (<span id="guestCount">0</span>)</h3>
+                    <div class="text-[10px] md:text-xs font-medium text-amber-600 bg-amber-100 px-3 py-1 rounded-full">Siap Dikirim 🚀</div>
+                </div>
+                
+                <div class="w-full">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="hidden md:table-header-group">
+                            <tr class="bg-amber-100/50 text-amber-900 text-xs font-bold uppercase tracking-wider">
+                                <th class="px-6 py-4 w-12 text-center">No</th>
+                                <th class="px-6 py-4">Nama Tamu</th>
+                                <th class="px-6 py-4">Nomor WhatsApp</th>
+                                <th class="px-6 py-4 w-28 text-center">Status</th>
+                                <th class="px-6 py-4 w-32 text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="guestTableBody" class="text-sm divide-y divide-amber-100 md:divide-amber-50">
+                            <tr>
+                                <td colspan="5" class="block md:table-cell px-6 py-12 text-center text-amber-600/60 font-medium italic">
+                                    Antrean masih kosong. Silakan masukkan data di atas.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
-            <div class="space-y-2">
-                <label class="block text-sm font-bold text-amber-700">Template Pesan</label>
-                <textarea id="messageTemplate" rows="8" 
-                    class="w-full px-4 py-3 border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400 text-xs shadow-sm bg-white/90 text-gray-700 transition resize-none md:resize-y"></textarea>
-            </div>
-
-        </div>
-
-        <!-- Bagian Bawah: Daftar Tamu dari CSV -->
-        <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl border border-amber-100 overflow-hidden">
-            <div class="p-4 md:p-6 border-b border-amber-100 flex justify-between items-center bg-gradient-to-r from-amber-50 to-white">
-                <h3 class="text-base md:text-lg font-bold text-amber-800">Daftar Antrean (<span id="guestCount">0</span>)</h3>
-                <div class="text-[10px] md:text-xs font-medium text-amber-600 bg-amber-100 px-3 py-1 rounded-full">Siap Dikirim 🚀</div>
-            </div>
-            
-            <div class="w-full">
-                <!-- Tabel akan menjadi Card Layout di layar kecil (Mobile) -->
-                <table class="w-full text-left border-collapse">
-                    <thead class="hidden md:table-header-group">
-                        <tr class="bg-amber-100/50 text-amber-900 text-xs font-bold uppercase tracking-wider">
-                            <th class="px-6 py-4 w-12 text-center">No</th>
-                            <th class="px-6 py-4">Nama Tamu</th>
-                            <th class="px-6 py-4">Nomor WhatsApp</th>
-                            <th class="px-6 py-4 w-28 text-center">Status</th>
-                            <th class="px-6 py-4 w-32 text-center">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="guestTableBody" class="text-sm divide-y divide-amber-100 md:divide-amber-50">
-                        <tr>
-                            <td colspan="5" class="block md:table-cell px-6 py-12 text-center text-amber-600/60 font-medium italic">
-                                Belum ada data. Silakan upload file CSV kamu. 🌻
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
         </div>
 
     </div>
 
     <script>
         let globalGuestList = [];
+        let currentActiveMode = '';
 
         window.onload = function() {
             const yellowHeart = String.fromCodePoint(0x1F49B);
-            
             const defaultText = `Assalamu'alaikum warahmatullahi wabarakatuh,
 Dengan memohon ridha Allah SWT, kami mengundang Bapak/Ibu/Saudara/i
 
@@ -124,6 +171,61 @@ Wassalamu'alaikum warahmatullahi wabarakatuh.`;
             
             document.getElementById('messageTemplate').value = defaultText;
         };
+
+        // Fungsi Memilih Mode di Halaman Awal
+        function setMode(mode) {
+            currentActiveMode = mode;
+            
+            // Sembunyikan Welcome Screen, Munculkan Workspace
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            document.getElementById('mainWorkspace').classList.remove('hidden');
+            
+            // Mengubah layout body (dari center-flex ke top-aligned) untuk workspace
+            document.body.classList.remove('flex', 'items-center', 'justify-center');
+
+            if(mode === 'manual') {
+                document.getElementById('manualInputFields').classList.remove('hidden');
+                document.getElementById('csvInputFields').classList.add('hidden');
+            } else if(mode === 'csv') {
+                document.getElementById('csvInputFields').classList.remove('hidden');
+                document.getElementById('manualInputFields').classList.add('hidden');
+            }
+            renderTable();
+        }
+
+        // Fungsi Reset Kembali ke Menu Utama Awal
+        function resetToWelcome() {
+            globalGuestList = []; // Reset data antrean demi keamanan
+            document.getElementById('fileNameDisplay').innerText = "Pilih File .csv";
+            
+            document.getElementById('mainWorkspace').classList.add('hidden');
+            document.getElementById('welcomeScreen').classList.remove('hidden');
+            
+            // Kembalikan layout body ke tengah
+            document.body.classList.add('flex', 'items-center', 'justify-center');
+        }
+
+        // Fungsi Menambah Tamu secara Manual
+        function addManualGuest() {
+            const nameField = document.getElementById('manualGuestName');
+            const phoneField = document.getElementById('manualGuestPhone');
+            
+            const name = nameField.value.trim();
+            let phone = phoneField.value.trim();
+
+            if (!name || !phone) {
+                alert('Nama dan Nomor HP wajib diisi!');
+                return;
+            }
+
+            globalGuestList.push({ name, phone, sent: false });
+            
+            // Clear input fields
+            nameField.value = '';
+            phoneField.value = '';
+            
+            renderTable();
+        }
 
         function handleFileSelect(event) {
             const file = event.target.files[0];
@@ -182,16 +284,13 @@ Wassalamu'alaikum warahmatullahi wabarakatuh.`;
             countDisplay.innerText = globalGuestList.length;
 
             if (globalGuestList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="block md:table-cell px-6 py-12 text-center text-amber-600/60 font-medium italic">Belum ada data. Silakan upload file CSV kamu. 🌻</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="block md:table-cell px-6 py-12 text-center text-amber-600/60 font-medium italic">Antrean masih kosong. Silakan masukkan data di atas.</td></tr>`;
                 return;
             }
 
             globalGuestList.forEach((guest, index) => {
                 const tr = document.createElement('tr');
-                // Mengubah baris (tr) menjadi block di mobile agar menumpuk ke bawah, dan table-row di desktop
-                tr.className = guest.sent 
-                    ? "bg-emerald-50/40 block md:table-row p-4 md:p-0" 
-                    : "hover:bg-amber-50/50 transition-colors block md:table-row p-4 md:p-0";
+                tr.className = guest.sent ? "bg-emerald-50/40 block md:table-row p-4 md:p-0" : "hover:bg-amber-50/50 transition-colors block md:table-row p-4 md:p-0";
 
                 tr.innerHTML = `
                     <td class="flex md:table-cell justify-between items-center px-0 py-1.5 md:px-6 md:py-4 md:text-center font-medium ${guest.sent ? 'text-emerald-400' : 'text-amber-700/50'}">
@@ -215,7 +314,7 @@ Wassalamu'alaikum warahmatullahi wabarakatuh.`;
                     <td class="block md:table-cell px-0 md:px-6 pt-4 pb-1 md:py-4 mt-2 md:mt-0 border-t border-amber-100 md:border-0 md:text-center">
                         <button onclick="sendIndividual(${index})" 
                             class="w-full md:w-auto px-4 py-3 md:py-2 text-sm md:text-xs font-bold rounded-lg shadow-sm text-white ${guest.sent ? 'bg-emerald-400 hover:bg-emerald-500' : 'bg-amber-500 hover:bg-amber-600'} transition-all transform md:hover:scale-105 flex items-center justify-center mx-auto gap-1.5">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                            <svg xmlns="http://www.w3.org/2000/xl" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z"/>
                             </svg>
                             ${guest.sent ? 'Kirim Ulang' : 'Kirim Sekarang'}
@@ -229,7 +328,7 @@ Wassalamu'alaikum warahmatullahi wabarakatuh.`;
         function sendIndividual(index) {
             const guest = globalGuestList[index];
             let template = document.getElementById('messageTemplate').value;
-            let phone = guest.phone.replace(/[- ]/g, ''); 
+            let phone = guest.phone.toString().replace(/[- ]/g, ''); 
 
             if (phone.startsWith('0')) {
                 phone = '62' + phone.slice(1);
