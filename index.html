@@ -165,10 +165,14 @@ https://wittywhale.id/Lina-Rizal/?to=[NAMA_URL]
 Jazakallahu khairan atas doa dan kehadirannya ${yellowHeart}
 Wassalamu'alaikum warahmatullahi wabarakatuh.`;
 
+            // EKSEKUSI UTAMA: Tarik paksa data murni dari Spreadsheet saat pertama kali web dibuka
             fetchFromCloud();
         };
 
         function fetchFromCloud() {
+            // Kosongkan array list terlebih dahulu agar tidak menumpuk data lama browser
+            globalGuestList = []; 
+            
             fetch(APPS_SCRIPT_URL, {
                 method: "POST",
                 body: JSON.stringify({ action: "get" }),
@@ -180,6 +184,7 @@ Wassalamu'alaikum warahmatullahi wabarakatuh.`;
             .then(data => {
                 if (data && data.length >= 0) {
                     globalGuestList = data;
+                    // Update localStorage lokal agar ikut bersih dan seragam dengan isi Sheets asli
                     localStorage.setItem('wedding_guest_list', JSON.stringify(globalGuestList));
                 }
                 renderTable();
@@ -262,7 +267,7 @@ Wassalamu'alaikum warahmatullahi wabarakatuh.`;
         function resetToWelcome() {
             document.getElementById('fileNameDisplay').innerText = "Pilih File .csv";
             document.getElementById('mainWorkspace').classList.add('hidden');
-            document.getElementById('welcomeScreen').classList.open || document.getElementById('welcomeScreen').classList.remove('hidden');
+            document.getElementById('welcomeScreen').classList.remove('hidden'); // FIX: Diperbaiki dari bug .classList.open sebelumnya
             document.body.classList.add('flex', 'items-center', 'justify-center');
         }
 
@@ -382,7 +387,7 @@ Wassalamu'alaikum warahmatullahi wabarakatuh.`;
                 `;
                 tbodyDesktop.appendChild(tr);
 
-                // --- 2. RENDER MOBILE VIEW (CLEAN CARD STACK - NO SCROLL) ---
+                // --- 2. RENDER MOBILE VIEW (CLEAN CARD STACK) ---
                 const card = document.createElement('div');
                 card.className = `p-4 rounded-xl border transition-all ${guest.sent ? 'bg-emerald-50/60 border-emerald-100' : 'bg-white border-amber-100/70 shadow-sm'} space-y-3`;
                 card.innerHTML = `
