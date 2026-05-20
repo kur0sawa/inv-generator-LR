@@ -165,15 +165,14 @@ https://wittywhale.id/Lina-Rizal/?to=[NAMA_URL]
 Jazakallahu khairan atas doa dan kehadirannya ${yellowHeart}
 Wassalamu'alaikum warahmatullahi wabarakatuh.`;
 
-            // EKSEKUSI UTAMA: Tarik paksa data murni dari Spreadsheet saat pertama kali web dibuka
             fetchFromCloud();
         };
 
         function fetchFromCloud() {
-            // Kosongkan array list terlebih dahulu agar tidak menumpuk data lama browser
-            globalGuestList = []; 
+            // Tambahkan timestamp unik (?_t=...) agar browser tidak membaca cache lama saat fetch ulang
+            const cacheBusterUrl = `${APPS_SCRIPT_URL}?_t=${new Date().getTime()}`;
             
-            fetch(APPS_SCRIPT_URL, {
+            fetch(cacheBusterUrl, {
                 method: "POST",
                 body: JSON.stringify({ action: "get" }),
                 headers: {
@@ -182,9 +181,9 @@ Wassalamu'alaikum warahmatullahi wabarakatuh.`;
             })
             .then(response => response.json())
             .then(data => {
-                if (data && data.length >= 0) {
+                // Pastikan data murni dari Sheets (walau cuma 1 list) langsung menimpa array lokal tanpa ampun
+                if (data && Array.isArray(data)) {
                     globalGuestList = data;
-                    // Update localStorage lokal agar ikut bersih dan seragam dengan isi Sheets asli
                     localStorage.setItem('wedding_guest_list', JSON.stringify(globalGuestList));
                 }
                 renderTable();
@@ -267,7 +266,7 @@ Wassalamu'alaikum warahmatullahi wabarakatuh.`;
         function resetToWelcome() {
             document.getElementById('fileNameDisplay').innerText = "Pilih File .csv";
             document.getElementById('mainWorkspace').classList.add('hidden');
-            document.getElementById('welcomeScreen').classList.remove('hidden'); // FIX: Diperbaiki dari bug .classList.open sebelumnya
+            document.getElementById('welcomeScreen').classList.remove('hidden');
             document.body.classList.add('flex', 'items-center', 'justify-center');
         }
 
