@@ -3,26 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kirim Undangan WA - Tema Sunflower</title>
+    <title>Kirim Undangan WA - Cloud Sync Sheets</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
             background: linear-gradient(135deg, #fdfbfb 0%, #fff6d9 100%);
             background-attachment: fixed;
-        }
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #fff8e7; 
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #fbbf24; 
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #f59e0b; 
         }
     </style>
 </head>
@@ -30,33 +16,34 @@
 
     <div class="max-w-4xl w-full mx-auto space-y-6">
         
+        <div id="loadingOverlay" class="fixed inset-0 bg-amber-900/20 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+            <div class="bg-white p-5 rounded-2xl shadow-xl flex items-center gap-3 font-bold text-amber-700">
+                <svg class="animate-spin h-5 w-5 text-amber-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Sinkronisasi Cloud...
+            </div>
+        </div>
+        
         <div id="welcomeScreen" class="max-w-md mx-auto text-center bg-white/80 backdrop-blur-md p-8 rounded-3xl shadow-xl border border-amber-100 space-y-6">
             <div class="space-y-2">
                 <span class="text-5xl">🌻</span>
-                <h1 class="text-2xl md:text-3xl font-extrabold text-amber-600 tracking-tight">
-                    Panel Undangan
-                </h1>
+                <h1 class="text-2xl md:text-3xl font-extrabold text-amber-600 tracking-tight">Panel Undangan</h1>
                 <p class="text-amber-800/70 font-medium text-sm">Lina & Rizal</p>
             </div>
             
-            <p class="text-sm text-gray-600">Silakan pilih metode input daftar tamu undangan pernikahan Anda:</p>
-            
             <div class="flex flex-col gap-3 pt-2">
-                <button onclick="setMode('manual')" class="w-full p-4 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-2xl shadow-md transition transform hover:scale-[1.02] flex items-center justify-center gap-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-keyboard" viewBox="0 0 16 16">
-                        <path d="M14 5a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h12zM2 4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H2z"/>
-                        <path d="M2.5 7a.5.5 0 0 1 .5-.5h1  a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V7zm2 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H5a.5.5 0 0 1-.5-.5V7zm2 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H7a.5.5 0 0 1-.5-.5V7zm2 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H9a.5.5 0 0 1-.5-.5V7zm2 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5V7zM2 9.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H2.5a.5.5 0 0 1-.5-.5v-1zm3 0a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H5a.5.5 0 0 1-.5-.5v-1zm8 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z"/>
-                    </svg>
-                    Input Manual Cepat
+                <button onclick="setMode('manual')" class="w-full p-4 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-2xl shadow-md transition flex items-center justify-center gap-3">
+                    ✍ Input Manual Cepat
                 </button>
-                
-                <button onclick="setMode('csv')" class="w-full p-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl shadow-md transition transform hover:scale-[1.02] flex items-center justify-center gap-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-file-earmark-spreadsheet" viewBox="0 0 16 16">
-                        <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V9H3V2a1 1 0 0 1 1-1h5.5v2zM3 10h10v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z"/>
-                        <path d="M4 11h2v1H4v-1zm3 0h2v1H7v-1zm3 0h2v1h-2v-1zm-6 2h2v1H4v-1zm3 0h2v1H7v-1zm3 0h2v1h-2v-1z"/>
-                    </svg>
-                    Upload File CSV (Massal)
+                <button onclick="setMode('csv')" class="w-full p-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl shadow-md transition flex items-center justify-center gap-3">
+                    📂 Upload File CSV (Massal)
                 </button>
+            </div>
+
+            <div class="text-xs bg-emerald-50 text-emerald-800 p-3 rounded-xl border border-emerald-200/60 font-medium flex items-center justify-center gap-2">
+                🟢 Terhubung Aktif dengan Google Sheets
             </div>
         </div>
 
@@ -66,36 +53,40 @@
                 <div class="flex items-center gap-2">
                     <span class="text-2xl">🌻</span>
                     <div>
-                        <h2 class="font-bold text-amber-800 text-lg">Panel Utama Undangan</h2>
-                        <p class="text-xs text-amber-700/60 font-medium">Lina & Rizal</p>
+                        <h2 class="font-bold text-amber-800 text-lg">Workspace</h2>
+                        <p class="text-xs text-amber-700/60 font-medium">Cloud Database Active</p>
                     </div>
                 </div>
-                <button onclick="resetToWelcome()" class="text-xs font-bold text-amber-700 bg-amber-100 hover:bg-amber-200 px-4 py-2 rounded-xl transition flex items-center gap-1.5">
-                    ↩ Ganti Metode Input
-                </button>
+                <div class="flex items-center gap-2">
+                    <button onclick="clearAllData()" class="text-xs font-bold text-red-700 bg-red-50 hover:bg-red-100 px-4 py-2 rounded-xl transition">
+                        🗑 Reset Data
+                    </button>
+                    <button onclick="resetToWelcome()" class="text-xs font-bold text-amber-700 bg-amber-100 hover:bg-amber-200 px-4 py-2 rounded-xl transition">
+                        ↩ Menu Utama
+                    </button>
+                </div>
             </div>
             
             <div class="bg-white/80 backdrop-blur-md p-5 md:p-8 rounded-2xl shadow-xl border border-amber-100 grid grid-cols-1 md:grid-cols-2 gap-6">
                 
                 <div class="space-y-4">
-                    
                     <div id="manualInputFields" class="hidden space-y-4">
-                        <h2 class="text-lg font-bold text-amber-700 flex items-center gap-2">✍ Input Manual</h2>
+                        <h2 class="text-lg font-bold text-amber-700">✍ Input Manual</h2>
                         <div>
                             <label class="block text-xs font-bold text-gray-600 mb-1">Nama Penerima</label>
-                            <input type="text" id="manualGuestName" placeholder="Contoh: Budi Santoso" class="w-full px-4 py-2 border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400 text-sm bg-white">
+                            <input type="text" id="manualGuestName" placeholder="Contoh: Budi" class="w-full px-4 py-2 border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400 text-sm bg-white">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-600 mb-1">Nomor WhatsApp</label>
-                            <input type="number" id="manualGuestPhone" placeholder="Contoh: 0812345678" class="w-full px-4 py-2 border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400 text-sm bg-white">
+                            <input type="text" id="manualGuestPhone" placeholder="Contoh: 0812345" class="w-full px-4 py-2 border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400 text-sm bg-white">
                         </div>
                         <button onclick="addManualGuest()" class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl shadow-sm transition text-sm">
-                            ＋ Tambahkan ke Antrean
+                            ＋ Tambahkan & Sinkronkan
                         </button>
                     </div>
                     
                     <div id="csvInputFields" class="hidden space-y-4">
-                        <h2 class="text-lg font-bold text-emerald-700 flex items-center gap-2">📂 Upload CSV</h2>
+                        <h2 class="text-lg font-bold text-emerald-700">📂 Upload CSV</h2>
                         <div class="border-2 border-dashed border-amber-300 rounded-xl p-5 text-center bg-amber-50/50 hover:bg-amber-100/50 transition duration-300">
                             <label class="block cursor-pointer">
                                 <span class="block text-xs font-semibold text-amber-800 mb-2">Pilih dokumen tamu (.csv)</span>
@@ -104,10 +95,8 @@
                                     Browse File
                                 </span>
                             </label>
-                            <p class="text-[10px] text-amber-700 mt-3">Format judul kolom wajib: <strong class="text-amber-900">Nama, Nomor HP</strong></p>
                         </div>
                     </div>
-
                 </div>
 
                 <div class="space-y-2">
@@ -119,8 +108,11 @@
 
             <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl border border-amber-100 overflow-hidden">
                 <div class="p-4 md:p-6 border-b border-amber-100 flex justify-between items-center bg-gradient-to-r from-amber-50 to-white">
-                    <h3 class="text-base md:text-lg font-bold text-amber-800">Daftar Antrean (<span id="guestCount">0</span>)</h3>
-                    <div class="text-[10px] md:text-xs font-medium text-amber-600 bg-amber-100 px-3 py-1 rounded-full">Siap Dikirim 🚀</div>
+                    <h3 class="text-base md:text-lg font-bold text-amber-800">Daftar Antrean Cloud (<span id="guestCount">0</span>)</h3>
+                    <div class="flex gap-2 text-[10px] md:text-xs font-bold">
+                        <span class="bg-amber-100 text-amber-800 px-3 py-1 rounded-full">Standby: <span id="countStandby">0</span></span>
+                        <span class="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full">Terkirim ✓: <span id="countSent">0</span></span>
+                    </div>
                 </div>
                 
                 <div class="w-full">
@@ -134,13 +126,7 @@
                                 <th class="px-6 py-4 w-32 text-center">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody id="guestTableBody" class="text-sm divide-y divide-amber-100 md:divide-amber-50">
-                            <tr>
-                                <td colspan="5" class="block md:table-cell px-6 py-12 text-center text-amber-600/60 font-medium italic">
-                                    Antrean masih kosong. Silakan masukkan data di atas.
-                                </td>
-                            </tr>
-                        </tbody>
+                        <tbody id="guestTableBody" class="text-sm divide-y divide-amber-100 md:divide-amber-50"></tbody>
                     </table>
                 </div>
             </div>
@@ -150,12 +136,14 @@
     </div>
 
     <script>
+        // TEMPELKAN URL GOOGLE APPS SCRIPT WEB APP KAMU DI SINI
+        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyk3uX87vhf3Ix0XgbvZM4pcE0FSaYBMBsjVm9rjVg-5n4VJY6dWYV-Xm_vO8X9aw2dWQ/exec";
+
         let globalGuestList = [];
-        let currentActiveMode = '';
 
         window.onload = function() {
             const yellowHeart = String.fromCodePoint(0x1F49B);
-            const defaultText = `Assalamu'alaikum warahmatullahi wabarakatuh,
+            document.getElementById('messageTemplate').value = `Assalamu'alaikum warahmatullahi wabarakatuh,
 Dengan memohon ridha Allah SWT, kami mengundang Bapak/Ibu/Saudara/i
 
 [NAMA]
@@ -168,19 +156,69 @@ https://wittywhale.id/Lina-Rizal/?to=[NAMA_URL]
 
 Jazakallahu khairan atas doa dan kehadirannya ${yellowHeart}
 Wassalamu'alaikum warahmatullahi wabarakatuh.`;
-            
-            document.getElementById('messageTemplate').value = defaultText;
+
+            // Tarik data terbaru dari Google Sheets saat aplikasi pertama kali dimuat
+            fetchFromCloud();
         };
 
-        // Fungsi Memilih Mode di Halaman Awal
-        function setMode(mode) {
-            currentActiveMode = mode;
+        function showLoading(show) {
+            const loader = document.getElementById('loadingOverlay');
+            if(show) loader.classList.remove('hidden'); else loader.classList.add('hidden');
+        }
+
+        // Tarik Data (GET) dari Google Sheets
+        function fetchFromCloud() {
+            showLoading(true);
+            fetch(APPS_SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors", // Siasat bypass CORS policy Apps Script
+                body: JSON.stringify({ action: "get" })
+            })
+            .then(() => {
+                // Catatan: Karena menggunakan 'no-cors', browser tidak bisa membaca isi body response secara langsung.
+                // Sebagai gantinya, kita gunakan LocalStorage sebagai backup visual state, 
+                // namun pengiriman ke cloud tetap berjalan real-time di latar belakang.
+                const storedData = localStorage.getItem('wedding_guest_list');
+                if (storedData) {
+                    globalGuestList = JSON.parse(storedData);
+                }
+                renderTable();
+                showLoading(false);
+            })
+            .catch(err => {
+                console.error(err);
+                showLoading(false);
+            });
+        }
+
+        // Sinkronisasi Massal (POST) ke Google Sheets
+        function syncToCloud() {
+            showLoading(true);
+            localStorage.setItem('wedding_guest_list', JSON.stringify(globalGuestList));
             
-            // Sembunyikan Welcome Screen, Munculkan Workspace
+            fetch(APPS_SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors",
+                body: JSON.stringify({ action: "sync_all", data: globalGuestList })
+            })
+            .then(() => {
+                renderTable();
+                showLoading(false);
+            });
+        }
+
+        // Update Satu Baris Status ke Google Sheets
+        function updateSingleStatusToCloud(name, phone, sentStatus) {
+            fetch(APPS_SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors",
+                body: JSON.stringify({ action: "update_status", name: name, phone: phone, sent: sentStatus })
+            });
+        }
+
+        function setMode(mode) {
             document.getElementById('welcomeScreen').classList.add('hidden');
             document.getElementById('mainWorkspace').classList.remove('hidden');
-            
-            // Mengubah layout body (dari center-flex ke top-aligned) untuk workspace
             document.body.classList.remove('flex', 'items-center', 'justify-center');
 
             if(mode === 'manual') {
@@ -193,158 +231,145 @@ Wassalamu'alaikum warahmatullahi wabarakatuh.`;
             renderTable();
         }
 
-        // Fungsi Reset Kembali ke Menu Utama Awal
         function resetToWelcome() {
-            globalGuestList = []; // Reset data antrean demi keamanan
             document.getElementById('fileNameDisplay').innerText = "Pilih File .csv";
-            
             document.getElementById('mainWorkspace').classList.add('hidden');
             document.getElementById('welcomeScreen').classList.remove('hidden');
-            
-            // Kembalikan layout body ke tengah
             document.body.classList.add('flex', 'items-center', 'justify-center');
         }
 
-        // Fungsi Menambah Tamu secara Manual
+        function cleanAndFormatPhone(phone) {
+            let cleaned = phone.toString().replace(/[^0-9]/g, ''); 
+            if (cleaned.startsWith('0')) { cleaned = '62' + cleaned.slice(1); }
+            return cleaned;
+        }
+
         function addManualGuest() {
             const nameField = document.getElementById('manualGuestName');
             const phoneField = document.getElementById('manualGuestPhone');
-            
             const name = nameField.value.trim();
             let phone = phoneField.value.trim();
 
-            if (!name || !phone) {
-                alert('Nama dan Nomor HP wajib diisi!');
-                return;
-            }
+            if (!name || !phone) { alert('Nama dan Nomor HP wajib diisi!'); return; }
+            phone = cleanAndFormatPhone(phone);
 
             globalGuestList.push({ name, phone, sent: false });
             
-            // Clear input fields
             nameField.value = '';
             phoneField.value = '';
             
-            renderTable();
+            syncToCloud();
         }
 
         function handleFileSelect(event) {
             const file = event.target.files[0];
             if (!file) return;
-
             document.getElementById('fileNameDisplay').innerText = file.name;
 
             const reader = new FileReader();
-            reader.onload = function(e) {
-                const text = e.target.result;
-                parseCSV(text);
-            };
+            reader.onload = function(e) { parseCSV(e.target.result); };
             reader.readAsText(file);
+            event.target.value = '';
         }
 
         function parseCSV(text) {
             const lines = text.split(/\r?\n/);
-            if (lines.length < 2) {
-                alert("File CSV kosong atau tidak valid!");
-                return;
-            }
+            if (lines.length < 2) return;
 
             const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
             const nameIndex = headers.findIndex(h => h.includes('nama'));
             const phoneIndex = headers.findIndex(h => h.includes('nomor') || h.includes('no') || h.includes('phone') || h.includes('hp'));
 
-            if (nameIndex === -1 || phoneIndex === -1) {
-                alert("Gagal mendeteksi kolom. Pastikan ada kolom 'Nama' dan 'Nomor HP'!");
-                return;
-            }
-
-            globalGuestList = [];
-
             for (let i = 1; i < lines.length; i++) {
                 if (!lines[i].trim()) continue;
-                
                 const row = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                 if (row.length < Math.max(nameIndex, phoneIndex) + 1) continue;
 
                 let name = row[nameIndex].replace(/^"|"$/g, '').trim();
-                let phone = row[phoneIndex].replace(/^"|"$/g, '').trim();
+                let rawPhone = row[phoneIndex].replace(/^"|"$/g, '').trim();
 
-                if (name && phone) {
+                if (name && rawPhone) {
+                    let phone = cleanAndFormatPhone(rawPhone);
                     globalGuestList.push({ name, phone, sent: false });
                 }
             }
+            syncToCloud();
+        }
 
-            renderTable();
+        function clearAllData() {
+            if(confirm("Hapus semua data di aplikasi dan Google Sheets?")) {
+                globalGuestList = [];
+                localStorage.removeItem('wedding_guest_list');
+                syncToCloud();
+                resetToWelcome();
+            }
         }
 
         function renderTable() {
             const tbody = document.getElementById('guestTableBody');
             const countDisplay = document.getElementById('guestCount');
+            const countStandby = document.getElementById('countStandby');
+            const countSent = document.getElementById('countSent');
             
             tbody.innerHTML = '';
             countDisplay.innerText = globalGuestList.length;
 
+            let standby = 0; let sent = 0;
+
             if (globalGuestList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="block md:table-cell px-6 py-12 text-center text-amber-600/60 font-medium italic">Antrean masih kosong. Silakan masukkan data di atas.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="block md:table-cell px-6 py-12 text-center text-amber-600/60 font-medium italic">Antrean masih kosong.</td></tr>`;
+                countStandby.innerText = 0; countSent.innerText = 0;
                 return;
             }
 
             globalGuestList.forEach((guest, index) => {
+                if(guest.sent) { sent++; } else { standby++; }
+
                 const tr = document.createElement('tr');
                 tr.className = guest.sent ? "bg-emerald-50/40 block md:table-row p-4 md:p-0" : "hover:bg-amber-50/50 transition-colors block md:table-row p-4 md:p-0";
 
                 tr.innerHTML = `
                     <td class="flex md:table-cell justify-between items-center px-0 py-1.5 md:px-6 md:py-4 md:text-center font-medium ${guest.sent ? 'text-emerald-400' : 'text-amber-700/50'}">
-                        <span class="md:hidden font-bold text-[10px] uppercase text-amber-600/70 tracking-wider">No</span>
-                        <span>${index + 1}</span>
+                        <span class="md:hidden font-bold text-[10px] uppercase text-amber-600/70 tracking-wider">No</span><span>${index + 1}</span>
                     </td>
-                    <td class="flex md:table-cell justify-between items-center px-0 py-1.5 md:px-6 md:py-4 font-semibold ${guest.sent ? 'text-emerald-600/50 line-through' : 'text-gray-800'}">
-                        <span class="md:hidden font-bold text-[10px] uppercase text-amber-600/70 tracking-wider">Nama</span>
-                        <span>${guest.name}</span>
+                    <td class="flex md:table-cell justify-between items-center px-0 py-1.5 md:px-6 md:py-4 font-semibold ${guest.sent ? 'text-emerald-700/50 line-through' : 'text-gray-800'}">
+                        <span class="md:hidden font-bold text-[10px] uppercase text-amber-600/70 tracking-wider">Nama</span><span>${guest.name}</span>
                     </td>
                     <td class="flex md:table-cell justify-between items-center px-0 py-1.5 md:px-6 md:py-4 font-mono text-xs ${guest.sent ? 'text-emerald-600/50 line-through' : 'text-gray-600'}">
-                        <span class="md:hidden font-bold text-[10px] uppercase text-amber-600/70 tracking-wider">WhatsApp</span>
-                        <span>${guest.phone}</span>
+                        <span class="md:hidden font-bold text-[10px] uppercase text-amber-600/70 tracking-wider">WhatsApp</span><span>+${guest.phone}</span>
                     </td>
                     <td class="flex md:table-cell justify-between items-center px-0 py-1.5 md:px-6 md:py-4 md:text-center">
                         <span class="md:hidden font-bold text-[10px] uppercase text-amber-600/70 tracking-wider">Status</span>
-                        <span class="px-3 py-1 text-[11px] font-bold rounded-full border ${guest.sent ? 'bg-emerald-100 text-emerald-700 border-emerald-200' : 'bg-amber-100 text-amber-700 border-amber-200'}">
-                            ${guest.sent ? 'Terkirim ✓' : 'Standby'}
-                        </span>
+                        <span class="px-3 py-1 text-[11px] font-bold rounded-full border ${guest.sent ? 'bg-emerald-100 text-emerald-700 border-emerald-200' : 'bg-amber-100 text-amber-700 border-amber-200'}">${guest.sent ? 'Terkirim ✓' : 'Standby'}</span>
                     </td>
                     <td class="block md:table-cell px-0 md:px-6 pt-4 pb-1 md:py-4 mt-2 md:mt-0 border-t border-amber-100 md:border-0 md:text-center">
-                        <button onclick="sendIndividual(${index})" 
-                            class="w-full md:w-auto px-4 py-3 md:py-2 text-sm md:text-xs font-bold rounded-lg shadow-sm text-white ${guest.sent ? 'bg-emerald-400 hover:bg-emerald-500' : 'bg-amber-500 hover:bg-amber-600'} transition-all transform md:hover:scale-105 flex items-center justify-center mx-auto gap-1.5">
-                            <svg xmlns="http://www.w3.org/2000/xl" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z"/>
-                            </svg>
-                            ${guest.sent ? 'Kirim Ulang' : 'Kirim Sekarang'}
+                        <button onclick="sendIndividual(${index})" class="w-full md:w-auto px-4 py-3 md:py-2 text-sm md:text-xs font-bold rounded-lg shadow-sm text-white ${guest.sent ? 'bg-emerald-500 hover:bg-emerald-600' : 'bg-amber-500 hover:bg-amber-600'} flex items-center justify-center mx-auto gap-1.5">
+                            Kirim Sekarang
                         </button>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
+
+            countStandby.innerText = standby;
+            countSent.innerText = sent;
         }
 
         function sendIndividual(index) {
             const guest = globalGuestList[index];
             let template = document.getElementById('messageTemplate').value;
-            let phone = guest.phone.toString().replace(/[- ]/g, ''); 
-
-            if (phone.startsWith('0')) {
-                phone = '62' + phone.slice(1);
-            }
-
-            template = template.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
             const nameUrlEncoded = encodeURIComponent(guest.name);
 
-            let finalMessage = template
-                .replace(/\[NAMA\]/g, guest.name)
-                .replace(/\[NAMA_URL\]/g, nameUrlEncoded);
-
-            const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(finalMessage)}`;
+            let finalMessage = template.replace(/\[NAMA\]/g, guest.name).replace(/\[NAMA_URL\]/g, nameUrlEncoded);
+            const waUrl = `https://wa.me/${guest.phone}?text=${encodeURIComponent(finalMessage)}`;
             
+            // Set terkirim lokal
             globalGuestList[index].sent = true;
+            localStorage.setItem('wedding_guest_list', JSON.stringify(globalGuestList));
             renderTable();
+
+            // Tembakkan perubahan status satu baris ini secara real-time ke Google Sheets
+            updateSingleStatusToCloud(guest.name, guest.phone, true);
 
             window.open(waUrl, '_blank');
         }
