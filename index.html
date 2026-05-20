@@ -20,24 +20,30 @@
 
     <div class="w-full max-w-4xl mx-auto space-y-6">
         
-        <div id="welcomeScreen" class="max-w-md mx-auto text-center bg-white/80 backdrop-blur-md p-6 md:p-8 rounded-3xl shadow-xl border border-amber-100 space-y-6">
-            <div class="space-y-2">
-                <span class="text-5xl">🌻</span>
-                <h1 class="text-2xl md:text-3xl font-extrabold text-amber-600 tracking-tight">Panel Undangan</h1>
-                <p class="text-amber-800/70 font-medium text-sm">Lina & Rizal</p>
-            </div>
-            
-            <div class="flex flex-col gap-3 pt-2">
-                <button onclick="setMode('manual')" class="w-full p-4 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-2xl shadow-md transition flex items-center justify-center gap-3">
-                    ✍ Input Manual Cepat
-                </button>
-                <button onclick="setMode('csv')" class="w-full p-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl shadow-md transition flex items-center justify-center gap-3">
-                    📂 Upload File CSV (Massal)
-                </button>
+        <div id="welcomeScreen" class="max-w-md mx-auto text-center bg-white/80 backdrop-blur-md p-6 md:p-8 rounded-3xl shadow-xl border border-amber-100 space-y-6 flex flex-col justify-between">
+            <div class="space-y-6">
+                <div class="space-y-2">
+                    <span class="text-5xl">🌻</span>
+                    <h1 class="text-2xl md:text-3xl font-extrabold text-amber-600 tracking-tight">Panel Undangan</h1>
+                    <p class="text-amber-800/70 font-medium text-sm">Lina & Rizal</p>
+                </div>
+                
+                <div class="flex flex-col gap-3 pt-2">
+                    <button onclick="setMode('manual')" class="w-full p-4 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-2xl shadow-md transition flex items-center justify-center gap-3">
+                        ✍ Input Manual Cepat
+                    </button>
+                    <button onclick="setMode('csv')" class="w-full p-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl shadow-md transition flex items-center justify-center gap-3">
+                        📂 Upload File CSV (Massal)
+                    </button>
+                </div>
+
+                <div id="cloudStatusBadge" class="text-xs bg-amber-50 text-amber-800 p-3 rounded-xl border border-amber-200 font-medium flex items-center justify-center gap-2">
+                    ⏳ Menghubungkan ke Firebase Cloud...
+                </div>
             </div>
 
-            <div id="cloudStatusBadge" class="text-xs bg-amber-50 text-amber-800 p-3 rounded-xl border border-amber-200 font-medium flex items-center justify-center gap-2">
-                ⏳ Menghubungkan ke Firebase Cloud...
+            <div class="text-[11px] text-amber-800/50 font-medium tracking-wide pt-4 border-t border-amber-100/60 italic select-none">
+                Made with full of love and a little bit of caffeine ☕
             </div>
         </div>
 
@@ -153,10 +159,9 @@
         let globalGuestList = [];
 
         window.onload = function() {
-            // UPDATE: Pretext baru dengan format BOLD khusus WhatsApp (*Teks*)
-            document.getElementById('messageTemplate').value = `Assalamu'alaikum warahmatullahi wabarakatuh,\n\nKepada yang terhomat Bapak/Ibu/Saudara/i serta sahabat kami\n*[NAMA]*\n\nBismillahirrahmanirrahim, tanpa mengurangi rasa hormat dan dengan penuh kerendahan hati kami mengundang kehadiran dan doa restu dalam acara walimah pernikahan kami.\n\nUntuk detail waktu dan lokasi dapat dilihat pada undangan berikut:\nhttps://wittywhale.id/Lina-Rizal/?to=[NAMA_URL]\n\nJazakallahu khairan atas segala doa dan kehadirannya 💛\n\nYang Berbahagia,\n*Lina & Rizal*\n\nWassalamu'alaikum warahmatullahi wabarakatuh.`;
+            document.getElementById('messageTemplate').value = `Assalamu'alaikum warahmatullahi wabarakatuh,\n\nKepada yang terhomat Bapak/Ibu/Saudara/i/Sahabat\n*[NAMA]*\n\nAlhamdulillah, tanpa mengurangi rasa hormat dan dengan penuh kerendahan hati kami mengundang kehadiran dan doa restu dalam acara walimah pernikahan kami.\n\nUntuk detail waktu dan lokasi dapat dilihat pada undangan berikut:\nhttps://wittywhale.id/Lina-Rizal/?to=[NAMA_URL]\n\nJazakallahu khairan atas segala doa dan kehadirannya 💛\n\nYang Berbahagia,\n*Lina & Rizal*\n\nWassalamu'alaikum warahmatullahi wabarakatuh.`;
 
-            // Sinkronisasi data real-time dua arah
+            // Sinkronisasi data real-time
             const q = query(guestsCollectionRef, orderBy("timestamp", "asc"));
             onSnapshot(q, (snapshot) => {
                 globalGuestList = [];
@@ -182,7 +187,6 @@
             });
         };
 
-        // Fungsi Tambah Tamu Manual
         window.addManualGuest = async function() {
             const nameField = document.getElementById('manualGuestName');
             const phoneField = document.getElementById('manualGuestPhone');
@@ -206,7 +210,6 @@
             } catch (e) { alert("Gagal menyimpan ke cloud: " + e.message); }
         };
 
-        // Fungsi Impor Massal CSV
         window.parseCSV = async function(text) {
             const lines = text.split(/\r?\n/);
             if (lines.length < 2) return;
@@ -247,7 +250,6 @@
             } catch (e) { alert("Gagal batch upload: " + e.message); }
         };
 
-        // Toggle Status Standby <--> Terkirim
         window.toggleStatus = async function(index) {
             const guest = globalGuestList[index];
             const newStatus = !guest.sent;
@@ -257,7 +259,6 @@
             } catch (e) { console.error("Gagal update status: ", e); }
         };
 
-        // Hapus Kontak Tunggal
         window.deleteIndividual = async function(index) {
             const guest = globalGuestList[index];
             if(confirm(`Hapus tamu "${guest.name}" dari database cloud?`)) {
@@ -267,7 +268,6 @@
             }
         };
 
-        // Clear All Database
         window.clearAllData = async function() {
             if(confirm("PERINGATAN! Ini akan menghapus BERSIH seluruh database tamu di Firebase Cloud secara permanen. Lanjutkan?")) {
                 const batch = writeBatch(db);
@@ -281,7 +281,6 @@
             }
         };
 
-        // Trigger WhatsApp Link Blast
         window.sendIndividual = function(index) {
             const guest = globalGuestList[index];
             let template = document.getElementById('messageTemplate').value;
@@ -295,7 +294,6 @@
             window.open(waUrl, '_blank');
         };
 
-        // UI Helpers
         window.setMode = function(mode) {
             document.getElementById('welcomeScreen').classList.add('hidden');
             document.getElementById('mainWorkspace').classList.remove('hidden');
@@ -376,7 +374,7 @@
                             Kirim Sekarang
                         </button>
                         <button onclick="deleteIndividual(${index})" class="px-3 py-2 text-xs font-bold rounded-lg shadow-sm bg-red-50 text-red-600 hover:bg-red-100 border border-red-200 transition transform active:scale-95" title="Hapus">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/><path d="M14.5 3 excise a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/><path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/></svg>
                         </button>
                     </td>
                 `;
