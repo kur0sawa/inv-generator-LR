@@ -30,16 +30,6 @@
 
     <div class="max-w-4xl w-full mx-auto space-y-6">
         
-        <div id="loadingOverlay" class="fixed inset-0 bg-amber-900/20 backdrop-blur-sm z-50 flex items-center justify-center hidden">
-            <div class="bg-white p-5 rounded-2xl shadow-xl flex items-center gap-3 font-bold text-amber-700">
-                <svg class="animate-spin h-5 w-5 text-amber-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                Sinkronisasi Cloud...
-            </div>
-        </div>
-        
         <div id="welcomeScreen" class="max-w-md mx-auto text-center bg-white/80 backdrop-blur-md p-8 rounded-3xl shadow-xl border border-amber-100 space-y-6">
             <div class="space-y-2">
                 <span class="text-5xl">🌻</span>
@@ -173,13 +163,8 @@ Wassalamu'alaikum warahmatullahi wabarakatuh.`;
             fetchFromCloud();
         };
 
-        function showLoading(show) {
-            const loader = document.getElementById('loadingOverlay');
-            if(show) loader.classList.remove('hidden'); else loader.classList.add('hidden');
-        }
-
+        // Mengambil data awal secara senyap di latar belakang
         function fetchFromCloud() {
-            showLoading(true);
             fetch(APPS_SCRIPT_URL, {
                 method: "POST",
                 mode: "no-cors",
@@ -191,29 +176,23 @@ Wassalamu'alaikum warahmatullahi wabarakatuh.`;
                     globalGuestList = JSON.parse(storedData);
                 }
                 renderTable();
-                showLoading(false);
             })
-            .catch(err => {
-                console.error(err);
-                showLoading(false);
-            });
+            .catch(err => console.error(err));
         }
 
+        // Sinkronisasi massal (Input Manual/CSV) senyap di latar belakang
         function syncToCloud() {
-            showLoading(true);
             localStorage.setItem('wedding_guest_list', JSON.stringify(globalGuestList));
+            renderTable();
             
             fetch(APPS_SCRIPT_URL, {
                 method: "POST",
                 mode: "no-cors",
                 body: JSON.stringify({ action: "sync_all", data: globalGuestList })
-            })
-            .then(() => {
-                renderTable();
-                showLoading(false);
             });
         }
 
+        // Pengiriman status tunggal senyap di latar belakang
         function updateSingleStatusToCloud(name, phone, sentStatus) {
             fetch(APPS_SCRIPT_URL, {
                 method: "POST",
@@ -222,14 +201,18 @@ Wassalamu'alaikum warahmatullahi wabarakatuh.`;
             });
         }
 
+        // Fungsi klik badge status: Ganti visual secara instan, lalu tembak cloud secara senyap
         function toggleStatus(index) {
             const currentStatus = globalGuestList[index].sent;
             const newStatus = !currentStatus;
             
             globalGuestList[index].sent = newStatus;
             localStorage.setItem('wedding_guest_list', JSON.stringify(globalGuestList));
+            
+            // Render visual di halaman saat itu juga (tanpa interupsi loading)
             renderTable();
 
+            // Tembak cloud secara background job
             updateSingleStatusToCloud(globalGuestList[index].name, globalGuestList[index].phone, newStatus);
         }
 
