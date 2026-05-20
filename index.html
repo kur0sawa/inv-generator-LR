@@ -63,7 +63,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                
+                <div class="flex items-center gap-2 w-full sm:w-auto justify-end flex-wrap">
+                    <button id="btnRefreshCloud" onclick="fetchFromCloud()" class="text-xs font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-3 py-2 rounded-xl transition flex items-center gap-1">
+                        <span>🔄</span> <span id="textRefreshCloud">Sinkronkan Cloud</span>
+                    </button>
                     <button onclick="clearAllData()" class="text-xs font-bold text-red-700 bg-red-50 hover:bg-red-100 px-3 py-2 rounded-xl transition">
                         🗑 Reset Data
                     </button>
@@ -168,25 +172,39 @@ Wassalamu'alaikum warahmatullahi wabarakatuh.`;
             fetchFromCloud();
         };
 
+        // Fungsi Ambil Data dengan Tombol & Proteksi State Visual
         function fetchFromCloud() {
-            // Tambahkan timestamp unik (?_t=...) agar browser tidak membaca cache lama saat fetch ulang
+            const btn = document.getElementById('btnRefreshCloud');
+            const txt = document.getElementById('textRefreshCloud');
+            
+            // Ubah UI sementara ke mode loading
+            if(btn && txt) {
+                btn.disabled = true;
+                txt.innerText = "Memuat...";
+                btn.classList.add('opacity-60');
+            }
+
             const cacheBusterUrl = `${APPS_SCRIPT_URL}?_t=${new Date().getTime()}`;
             
             fetch(cacheBusterUrl, {
                 method: "POST",
                 body: JSON.stringify({ action: "get" }),
-                headers: {
-                    "Content-Type": "text/plain"
-                }
+                headers: { "Content-Type": "text/plain" }
             })
             .then(response => response.json())
             .then(data => {
-                // Pastikan data murni dari Sheets (walau cuma 1 list) langsung menimpa array lokal tanpa ampun
                 if (data && Array.isArray(data)) {
                     globalGuestList = data;
                     localStorage.setItem('wedding_guest_list', JSON.stringify(globalGuestList));
                 }
                 renderTable();
+                
+                // Kembalikan UI tombol ke semula
+                if(btn && txt) {
+                    btn.disabled = false;
+                    txt.innerText = "Sinkronkan Cloud";
+                    btn.classList.remove('opacity-60');
+                }
             })
             .catch(err => {
                 console.error("Gagal sinkronisasi cloud, fallback ke penyimpanan lokal...", err);
@@ -195,6 +213,12 @@ Wassalamu'alaikum warahmatullahi wabarakatuh.`;
                     globalGuestList = JSON.parse(storedData);
                 }
                 renderTable();
+                
+                if(btn && txt) {
+                    btn.disabled = false;
+                    txt.innerText = "Sinkronkan Cloud";
+                    btn.classList.remove('opacity-60');
+                }
             });
         }
 
@@ -360,7 +384,7 @@ Wassalamu'alaikum warahmatullahi wabarakatuh.`;
             globalGuestList.forEach((guest, index) => {
                 if(guest.sent) { sent++; } else { standby++; }
 
-                // --- 1. RENDER DESKTOP VIEW (TABLE ROW) ---
+                // --- DESKTOP VIEW ---
                 const tr = document.createElement('tr');
                 tr.className = guest.sent ? "bg-emerald-50/30" : "hover:bg-amber-50/50 transition-colors";
                 tr.innerHTML = `
@@ -386,7 +410,7 @@ Wassalamu'alaikum warahmatullahi wabarakatuh.`;
                 `;
                 tbodyDesktop.appendChild(tr);
 
-                // --- 2. RENDER MOBILE VIEW (CLEAN CARD STACK) ---
+                // --- MOBILE VIEW ---
                 const card = document.createElement('div');
                 card.className = `p-4 rounded-xl border transition-all ${guest.sent ? 'bg-emerald-50/60 border-emerald-100' : 'bg-white border-amber-100/70 shadow-sm'} space-y-3`;
                 card.innerHTML = `
