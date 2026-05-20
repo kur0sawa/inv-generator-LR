@@ -171,17 +171,27 @@ Wassalamu'alaikum warahmatullahi wabarakatuh.`;
         function fetchFromCloud() {
             fetch(APPS_SCRIPT_URL, {
                 method: "POST",
-                mode: "no-cors",
-                body: JSON.stringify({ action: "get" })
+                body: JSON.stringify({ action: "get" }),
+                headers: {
+                    "Content-Type": "text/plain"
+                }
             })
-            .then(() => {
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.length >= 0) {
+                    globalGuestList = data;
+                    localStorage.setItem('wedding_guest_list', JSON.stringify(globalGuestList));
+                }
+                renderTable();
+            })
+            .catch(err => {
+                console.error("Gagal sinkronisasi cloud, fallback ke penyimpanan lokal...", err);
                 const storedData = localStorage.getItem('wedding_guest_list');
                 if (storedData) {
                     globalGuestList = JSON.parse(storedData);
                 }
                 renderTable();
-            })
-            .catch(err => console.error(err));
+            });
         }
 
         function syncToCloud() {
@@ -252,7 +262,7 @@ Wassalamu'alaikum warahmatullahi wabarakatuh.`;
         function resetToWelcome() {
             document.getElementById('fileNameDisplay').innerText = "Pilih File .csv";
             document.getElementById('mainWorkspace').classList.add('hidden');
-            document.getElementById('welcomeScreen').classList.remove('hidden');
+            document.getElementById('welcomeScreen').classList.open || document.getElementById('welcomeScreen').classList.remove('hidden');
             document.body.classList.add('flex', 'items-center', 'justify-center');
         }
 
