@@ -26,11 +26,11 @@
         }
     </style>
 </head>
-<body class="min-h-screen p-4 md:p-8 text-gray-800 flex items-center justify-center">
+<body class="min-h-screen p-3 md:p-8 text-gray-800 flex items-center justify-center">
 
-    <div class="max-w-4xl w-full mx-auto space-y-6">
+    <div class="w-full max-w-4xl mx-auto space-y-6">
         
-        <div id="welcomeScreen" class="max-w-md mx-auto text-center bg-white/80 backdrop-blur-md p-8 rounded-3xl shadow-xl border border-amber-100 space-y-6">
+        <div id="welcomeScreen" class="max-w-md mx-auto text-center bg-white/80 backdrop-blur-md p-6 md:p-8 rounded-3xl shadow-xl border border-amber-100 space-y-6">
             <div class="space-y-2">
                 <span class="text-5xl">🌻</span>
                 <h1 class="text-2xl md:text-3xl font-extrabold text-amber-600 tracking-tight">Panel Undangan</h1>
@@ -51,31 +51,33 @@
             </div>
         </div>
 
-        <div id="mainWorkspace" class="hidden space-y-6">
+        <div id="mainWorkspace" class="hidden space-y-4 md:space-y-6">
             
             <div class="flex flex-col sm:flex-row justify-between items-center bg-white/60 backdrop-blur-sm p-4 rounded-2xl border border-amber-100 gap-4">
-                <div class="flex items-center gap-2">
-                    <span class="text-2xl">🌻</span>
-                    <div>
-                        <h2 class="font-bold text-amber-800 text-lg">Workspace</h2>
-                        <p class="text-xs text-amber-700/60 font-medium">Cloud Database Active</p>
+                <div class="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-start">
+                    <div class="flex items-center gap-2">
+                        <span class="text-2xl">🌻</span>
+                        <div>
+                            <h2 class="font-bold text-amber-800 text-base md:text-lg">Workspace</h2>
+                            <p class="text-[10px] md:text-xs text-amber-700/60 font-medium">Cloud Database Active</p>
+                        </div>
                     </div>
                 </div>
-                <div class="flex items-center gap-2">
-                    <button onclick="clearAllData()" class="text-xs font-bold text-red-700 bg-red-50 hover:bg-red-100 px-4 py-2 rounded-xl transition">
+                <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                    <button onclick="clearAllData()" class="text-xs font-bold text-red-700 bg-red-50 hover:bg-red-100 px-3 py-2 rounded-xl transition">
                         🗑 Reset Data
                     </button>
-                    <button onclick="resetToWelcome()" class="text-xs font-bold text-amber-700 bg-amber-100 hover:bg-amber-200 px-4 py-2 rounded-xl transition">
+                    <button onclick="resetToWelcome()" class="text-xs font-bold text-amber-700 bg-amber-100 hover:bg-amber-200 px-3 py-2 rounded-xl transition">
                         ↩ Menu Utama
                     </button>
                 </div>
             </div>
             
-            <div class="bg-white/80 backdrop-blur-md p-5 md:p-8 rounded-2xl shadow-xl border border-amber-100 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-white/80 backdrop-blur-md p-4 md:p-8 rounded-2xl shadow-xl border border-amber-100 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 
                 <div class="space-y-4">
                     <div id="manualInputFields" class="hidden space-y-4">
-                        <h2 class="text-lg font-bold text-amber-700">✍ Input Manual</h2>
+                        <h2 class="text-base md:text-lg font-bold text-amber-700">✍ Input Manual</h2>
                         <div>
                             <label class="block text-xs font-bold text-gray-600 mb-1">Nama Penerima</label>
                             <input type="text" id="manualGuestName" placeholder="Contoh: Budi" class="w-full px-4 py-2 border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400 text-sm bg-white">
@@ -90,8 +92,8 @@
                     </div>
                     
                     <div id="csvInputFields" class="hidden space-y-4">
-                        <h2 class="text-lg font-bold text-emerald-700">📂 Upload CSV</h2>
-                        <div class="border-2 border-dashed border-amber-300 rounded-xl p-5 text-center bg-amber-50/50 hover:bg-amber-100/50 transition duration-300">
+                        <h2 class="text-base md:text-lg font-bold text-emerald-700">📂 Upload CSV</h2>
+                        <div class="border-2 border-dashed border-amber-300 rounded-xl p-4 text-center bg-amber-50/50 hover:bg-amber-100/50 transition duration-300">
                             <label class="block cursor-pointer">
                                 <span class="block text-xs font-semibold text-amber-800 mb-2">Pilih dokumen tamu (.csv)</span>
                                 <input type="file" id="csvFile" accept=".csv" class="hidden" onchange="handleFileSelect(event)">
@@ -105,13 +107,13 @@
 
                 <div class="space-y-2">
                     <label class="block text-sm font-bold text-amber-700">Template Pesan</label>
-                    <textarea id="messageTemplate" rows="8" class="w-full px-4 py-3 border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400 text-xs shadow-sm bg-white/90 text-gray-700 transition resize-none"></textarea>
+                    <textarea id="messageTemplate" rows="6" class="w-full px-4 py-3 border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400 text-xs shadow-sm bg-white/90 text-gray-700 transition resize-none"></textarea>
                 </div>
 
             </div>
 
             <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl border border-amber-100 overflow-hidden">
-                <div class="p-4 md:p-6 border-b border-amber-100 flex justify-between items-center bg-gradient-to-r from-amber-50 to-white">
+                <div class="p-4 md:p-6 border-b border-amber-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 bg-gradient-to-r from-amber-50 to-white">
                     <h3 class="text-base md:text-lg font-bold text-amber-800">Daftar Antrean Cloud (<span id="guestCount">0</span>)</h3>
                     <div class="flex gap-2 text-[10px] md:text-xs font-bold">
                         <span class="bg-amber-100 text-amber-800 px-3 py-1 rounded-full">Standby: <span id="countStandby">0</span></span>
@@ -119,9 +121,9 @@
                     </div>
                 </div>
                 
-                <div class="w-full overflow-x-auto">
-                    <table class="w-full text-left border-collapse min-w-[650px] md:min-w-0">
-                        <thead class="hidden md:table-header-group">
+                <div class="w-full">
+                    <table class="w-full text-left border-collapse hidden md:table">
+                        <thead>
                             <tr class="bg-amber-100/50 text-amber-900 text-xs font-bold uppercase tracking-wider">
                                 <th class="px-6 py-4 w-12 text-center">No</th>
                                 <th class="px-6 py-4">Nama Tamu</th>
@@ -130,8 +132,10 @@
                                 <th class="px-6 py-4 w-48 text-center">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody id="guestTableBody" class="text-sm divide-y divide-amber-100 md:divide-amber-50"></tbody>
+                        <tbody id="guestTableBodyDesktop" class="text-sm divide-y divide-amber-50"></tbody>
                     </table>
+
+                    <div id="guestCardContainerMobile" class="block md:hidden divide-y divide-amber-100 p-2 space-y-3 bg-white/50"></div>
                 </div>
             </div>
 
@@ -143,6 +147,7 @@
         const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyk3uX87vhf3Ix0XgbvZM4pcE0FSaYBMBsjVm9rjVg-5n4VJY6dWYV-Xm_vO8X9aw2dWQ/exec";
 
         let globalGuestList = [];
+        let isSyncing = false;
 
         window.onload = function() {
             const yellowHeart = String.fromCodePoint(0x1F49B);
@@ -163,7 +168,6 @@ Wassalamu'alaikum warahmatullahi wabarakatuh.`;
             fetchFromCloud();
         };
 
-        // Mengambil data awal secara senyap di latar belakang
         function fetchFromCloud() {
             fetch(APPS_SCRIPT_URL, {
                 method: "POST",
@@ -180,7 +184,6 @@ Wassalamu'alaikum warahmatullahi wabarakatuh.`;
             .catch(err => console.error(err));
         }
 
-        // Sinkronisasi massal (Input Manual/CSV) senyap di latar belakang
         function syncToCloud() {
             localStorage.setItem('wedding_guest_list', JSON.stringify(globalGuestList));
             renderTable();
@@ -192,27 +195,35 @@ Wassalamu'alaikum warahmatullahi wabarakatuh.`;
             });
         }
 
-        // Pengiriman status tunggal senyap di latar belakang
         function updateSingleStatusToCloud(name, phone, sentStatus) {
+            isSyncing = true;
             fetch(APPS_SCRIPT_URL, {
                 method: "POST",
                 mode: "no-cors",
                 body: JSON.stringify({ action: "update_status", name: name, phone: phone, sent: sentStatus })
+            }).then(() => {
+                isSyncing = false;
+            }).catch(() => {
+                isSyncing = false;
             });
         }
 
-        // Fungsi klik badge status: Ganti visual secara instan, lalu tembak cloud secara senyap
+        window.addEventListener('beforeunload', function (e) {
+            if (isSyncing) {
+                e.preventDefault();
+                e.returnValue = 'Data sedang dikirim ke Google Sheets. Apakah Anda yakin ingin keluar?';
+                return e.returnValue;
+            }
+        });
+
         function toggleStatus(index) {
             const currentStatus = globalGuestList[index].sent;
-            const newStatus = !currentStatus; // kebalikan dari status sekarang
+            const newStatus = !currentStatus;
             
-            // 1. Update data lokal dulu biar cepat secara visual
             globalGuestList[index].sent = newStatus;
             localStorage.setItem('wedding_guest_list', JSON.stringify(globalGuestList));
             renderTable();
 
-            // 2. Kirim data ke Google Sheets secara real-time di latar belakang
-            // Mengirim objek nama, phone, dan boolean status terbaru
             updateSingleStatusToCloud(globalGuestList[index].name, globalGuestList[index].phone, newStatus);
         }
 
@@ -261,7 +272,6 @@ Wassalamu'alaikum warahmatullahi wabarakatuh.`;
             phone = cleanAndFormatPhone(phone);
 
             globalGuestList.push({ name, phone, sent: false });
-            
             nameField.value = '';
             phoneField.value = '';
             
@@ -313,18 +323,22 @@ Wassalamu'alaikum warahmatullahi wabarakatuh.`;
         }
 
         function renderTable() {
-            const tbody = document.getElementById('guestTableBody');
+            const tbodyDesktop = document.getElementById('guestTableBodyDesktop');
+            const containerMobile = document.getElementById('guestCardContainerMobile');
             const countDisplay = document.getElementById('guestCount');
             const countStandby = document.getElementById('countStandby');
             const countSent = document.getElementById('countSent');
             
-            tbody.innerHTML = '';
+            tbodyDesktop.innerHTML = '';
+            containerMobile.innerHTML = '';
             countDisplay.innerText = globalGuestList.length;
 
             let standby = 0; let sent = 0;
 
             if (globalGuestList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="block md:table-cell px-6 py-12 text-center text-amber-600/60 font-medium italic">Antrean masih kosong.</td></tr>`;
+                const emptyHTML = `<div class="p-8 text-center text-amber-600/60 font-medium italic text-sm">Antrean masih kosong.</div>`;
+                tbodyDesktop.innerHTML = `<tr><td colspan="5" class="px-6 py-12 text-center text-amber-600/60 font-medium italic">Antrean masih kosong.</td></tr>`;
+                containerMobile.innerHTML = emptyHTML;
                 countStandby.innerText = 0; countSent.innerText = 0;
                 return;
             }
@@ -332,38 +346,60 @@ Wassalamu'alaikum warahmatullahi wabarakatuh.`;
             globalGuestList.forEach((guest, index) => {
                 if(guest.sent) { sent++; } else { standby++; }
 
+                // --- 1. RENDER DESKTOP VIEW (TABLE ROW) ---
                 const tr = document.createElement('tr');
-                tr.className = guest.sent ? "bg-emerald-50/40 block md:table-row p-4 md:p-0" : "hover:bg-amber-50/50 transition-colors block md:table-row p-4 md:p-0";
-
+                tr.className = guest.sent ? "bg-emerald-50/30" : "hover:bg-amber-50/50 transition-colors";
                 tr.innerHTML = `
-                    <td class="flex md:table-cell justify-between items-center px-0 py-1.5 md:px-6 md:py-4 md:text-center font-medium ${guest.sent ? 'text-emerald-400' : 'text-amber-700/50'}">
-                        <span class="md:hidden font-bold text-[10px] uppercase text-amber-600/70 tracking-wider">No</span><span>${index + 1}</span>
-                    </td>
-                    <td class="flex md:table-cell justify-between items-center px-0 py-1.5 md:px-6 md:py-4 font-semibold ${guest.sent ? 'text-emerald-700/50 line-through' : 'text-gray-800'}">
-                        <span class="md:hidden font-bold text-[10px] uppercase text-amber-600/70 tracking-wider">Nama</span><span>${guest.name}</span>
-                    </td>
-                    <td class="flex md:table-cell justify-between items-center px-0 py-1.5 md:px-6 md:py-4 font-mono text-xs ${guest.sent ? 'text-emerald-600/50 line-through' : 'text-gray-600'}">
-                        <span class="md:hidden font-bold text-[10px] uppercase text-amber-600/70 tracking-wider">WhatsApp</span><span>+${guest.phone}</span>
-                    </td>
-                    <td class="flex md:table-cell justify-between items-center px-0 py-1.5 md:px-6 md:py-4 md:text-center">
-                        <span class="md:hidden font-bold text-[10px] uppercase text-amber-600/70 tracking-wider">Status</span>
+                    <td class="px-6 py-4 text-center font-medium ${guest.sent ? 'text-emerald-400' : 'text-amber-700/50'}">${index + 1}</td>
+                    <td class="px-6 py-4 font-semibold ${guest.sent ? 'text-emerald-700/50 line-through' : 'text-gray-800'}">${guest.name}</td>
+                    <td class="px-6 py-4 font-mono text-xs ${guest.sent ? 'text-emerald-600/50 line-through' : 'text-gray-600'}">+${guest.phone}</td>
+                    <td class="px-6 py-4 text-center">
                         <button onclick="toggleStatus(${index})" class="inline-block px-3 py-1 text-[11px] font-bold rounded-full border cursor-pointer transition transform active:scale-95 whitespace-nowrap ${guest.sent ? 'bg-emerald-100 text-emerald-700 border-emerald-200 hover:bg-emerald-200' : 'bg-amber-100 text-amber-700 border-amber-200 hover:bg-amber-200'}">
                             ${guest.sent ? 'Terkirim ✓' : 'Standby'}
                         </button>
                     </td>
-                    <td class="flex md:table-cell items-center justify-center gap-2 px-0 md:px-6 pt-4 pb-1 md:py-4 mt-2 md:mt-0 border-t border-amber-100 md:border-0 md:text-center">
-                        <button onclick="sendIndividual(${index})" class="flex-1 md:flex-initial px-4 py-2 text-xs font-bold rounded-lg shadow-sm text-white ${guest.sent ? 'bg-emerald-500 hover:bg-emerald-600' : 'bg-amber-500 hover:bg-amber-600'} flex items-center justify-center gap-1.5 transition transform active:scale-95">
+                    <td class="px-6 py-4 flex items-center justify-center gap-2">
+                        <button onclick="sendIndividual(${index})" class="px-4 py-2 text-xs font-bold rounded-lg shadow-sm text-white ${guest.sent ? 'bg-emerald-500 hover:bg-emerald-600' : 'bg-amber-500 hover:bg-amber-600'} transition transform active:scale-95">
                             Kirim Sekarang
                         </button>
-                        <button onclick="deleteIndividual(${index})" class="px-3 py-2 text-xs font-bold rounded-lg shadow-sm bg-red-50 text-red-600 hover:bg-red-100 border border-red-200 flex items-center justify-center transition transform active:scale-95" title="Hapus dari antrean">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                        <button onclick="deleteIndividual(${index})" class="px-3 py-2 text-xs font-bold rounded-lg shadow-sm bg-red-50 text-red-600 hover:bg-red-100 border border-red-200 transition transform active:scale-95" title="Hapus">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/>
                                 <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/>
                             </svg>
                         </button>
                     </td>
                 `;
-                tbody.appendChild(tr);
+                tbodyDesktop.appendChild(tr);
+
+                // --- 2. RENDER MOBILE VIEW (CLEAN CARD STACK - NO SCROLL) ---
+                const card = document.createElement('div');
+                card.className = `p-4 rounded-xl border transition-all ${guest.sent ? 'bg-emerald-50/60 border-emerald-100' : 'bg-white border-amber-100/70 shadow-sm'} space-y-3`;
+                card.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="text-[10px] font-bold text-amber-600/70 uppercase tracking-wider block">Tamu #${index + 1}</span>
+                            <h4 class="font-bold text-gray-800 text-sm mt-0.5 ${guest.sent ? 'line-through text-emerald-800/50' : ''}">${guest.name}</h4>
+                            <p class="font-mono text-xs text-gray-500 mt-0.5 ${guest.sent ? 'line-through text-emerald-600/40' : ''}">+${guest.phone}</p>
+                        </div>
+                        <button onclick="toggleStatus(${index})" class="px-3 py-1 text-[11px] font-bold rounded-full border transition transform active:scale-95 ${guest.sent ? 'bg-emerald-100 text-emerald-700 border-emerald-200' : 'bg-amber-100 text-amber-700 border-amber-200'}">
+                            ${guest.sent ? 'Terkirim ✓' : 'Standby'}
+                        </button>
+                    </div>
+                    
+                    <div class="flex gap-2 pt-1 border-t border-dashed ${guest.sent ? 'border-emerald-200/50' : 'border-amber-100'}">
+                        <button onclick="sendIndividual(${index})" class="flex-1 py-2.5 text-xs font-bold rounded-xl text-white ${guest.sent ? 'bg-emerald-500' : 'bg-amber-500'} flex items-center justify-center gap-1 transition transform active:scale-95">
+                            Kirim Sekarang
+                        </button>
+                        <button onclick="deleteIndividual(${index})" class="px-4 py-2.5 text-xs font-bold rounded-xl bg-red-50 text-red-600 border border-red-100 flex items-center justify-center transition transform active:scale-95">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/>
+                                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/>
+                            </svg>
+                        </button>
+                    </div>
+                `;
+                containerMobile.appendChild(card);
             });
 
             countStandby.innerText = standby;
