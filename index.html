@@ -3,27 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kirim Undangan WA - Cloud Sync Sheets</title>
+    <title>Kirim Undangan WA - Firebase Realtime Cloud</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
             background: linear-gradient(135deg, #fdfbfb 0%, #fff6d9 100%);
             background-attachment: fixed;
         }
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #fff8e7; 
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #fbbf24; 
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #f59e0b; 
-        }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #fff8e7; }
+        ::-webkit-scrollbar-thumb { background: #fbbf24; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #f59e0b; }
     </style>
 </head>
 <body class="min-h-screen p-3 md:p-8 text-gray-800 flex items-center justify-center">
@@ -46,8 +36,8 @@
                 </button>
             </div>
 
-            <div class="text-xs bg-emerald-50 text-emerald-800 p-3 rounded-xl border border-emerald-200/60 font-medium flex items-center justify-center gap-2">
-                🟢 Terhubung Aktif dengan Google Sheets
+            <div id="cloudStatusBadge" class="text-xs bg-amber-50 text-amber-800 p-3 rounded-xl border border-amber-200 font-medium flex items-center justify-center gap-2">
+                ⏳ Menghubungkan ke Firebase Cloud...
             </div>
         </div>
 
@@ -59,17 +49,14 @@
                         <span class="text-2xl">🌻</span>
                         <div>
                             <h2 class="font-bold text-amber-800 text-base md:text-lg">Workspace</h2>
-                            <p class="text-[10px] md:text-xs text-amber-700/60 font-medium">Cloud Database Active</p>
+                            <p id="workspaceCloudStatus" class="text-[10px] text-emerald-600 font-bold">Firebase Realtime Connected ⚡</p>
                         </div>
                     </div>
                 </div>
                 
                 <div class="flex items-center gap-2 w-full sm:w-auto justify-end flex-wrap">
-                    <button id="btnRefreshCloud" onclick="fetchFromCloud()" class="text-xs font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-3 py-2 rounded-xl transition flex items-center gap-1">
-                        <span>🔄</span> <span id="textRefreshCloud">Sinkronkan Cloud</span>
-                    </button>
                     <button onclick="clearAllData()" class="text-xs font-bold text-red-700 bg-red-50 hover:bg-red-100 px-3 py-2 rounded-xl transition">
-                        🗑 Reset Data
+                        🗑 Reset Hapus Semua Data
                     </button>
                     <button onclick="resetToWelcome()" class="text-xs font-bold text-amber-700 bg-amber-100 hover:bg-amber-200 px-3 py-2 rounded-xl transition">
                         ↩ Menu Utama
@@ -78,7 +65,6 @@
             </div>
             
             <div class="bg-white/80 backdrop-blur-md p-4 md:p-8 rounded-2xl shadow-xl border border-amber-100 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                
                 <div class="space-y-4">
                     <div id="manualInputFields" class="hidden space-y-4">
                         <h2 class="text-base md:text-lg font-bold text-amber-700">✍ Input Manual</h2>
@@ -91,7 +77,7 @@
                             <input type="text" id="manualGuestPhone" placeholder="Contoh: 0812345" class="w-full px-4 py-2 border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400 text-sm bg-white">
                         </div>
                         <button onclick="addManualGuest()" class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl shadow-sm transition text-sm">
-                            ＋ Tambahkan & Sinkronkan
+                            ＋ Tambahkan ke Firebase cloud
                         </button>
                     </div>
                     
@@ -113,7 +99,6 @@
                     <label class="block text-sm font-bold text-amber-700">Template Pesan</label>
                     <textarea id="messageTemplate" rows="6" class="w-full px-4 py-3 border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400 text-xs shadow-sm bg-white/90 text-gray-700 transition resize-none"></textarea>
                 </div>
-
             </div>
 
             <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl border border-amber-100 overflow-hidden">
@@ -132,147 +117,186 @@
                                 <th class="px-6 py-4 w-12 text-center">No</th>
                                 <th class="px-6 py-4">Nama Tamu</th>
                                 <th class="px-6 py-4">Nomor WhatsApp</th>
-                                <th class="px-6 py-4 w-40 text-center">Status (Klik untuk Ubah)</th>
+                                <th class="px-6 py-4 w-40 text-center">Status</th>
                                 <th class="px-6 py-4 w-48 text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody id="guestTableBodyDesktop" class="text-sm divide-y divide-amber-50"></tbody>
                     </table>
-
                     <div id="guestCardContainerMobile" class="block md:hidden divide-y divide-amber-100 p-2 space-y-3 bg-white/50"></div>
                 </div>
             </div>
 
         </div>
-
     </div>
 
-    <script>
-        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyk3uX87vhf3Ix0XgbvZM4pcE0FSaYBMBsjVm9rjVg-5n4VJY6dWYV-Xm_vO8X9aw2dWQ/exec";
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, doc, setDoc, deleteDoc, writeBatch, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // Konfigurasi Firebase milik Fahrizal
+        const firebaseConfig = {
+            apiKey: "AIzaSyDmkYQpLfPj61r_x_x1MpO_DQkrOhK-4VM",
+            authDomain: "database-undangan-lr.firebaseapp.com",
+            projectId: "database-undangan-lr",
+            storageBucket: "database-undangan-lr.firebasestorage.app",
+            messagingSenderId: "960718379928",
+            appId: "1:960718379928:web:8257e924172eeaeec369ed",
+            measurementId: "G-3EGCXNHMT9"
+        };
+
+        // Inisialisasi Firebase & Firestore
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const guestsCollectionRef = collection(db, "tamu_undangan");
 
         let globalGuestList = [];
-        let isSyncing = false;
 
         window.onload = function() {
             const yellowHeart = String.fromCodePoint(0x1F49B);
-            document.getElementById('messageTemplate').value = `Assalamu'alaikum warahmatullahi wabarakatuh,
-Dengan memohon ridha Allah SWT, kami mengundang Bapak/Ibu/Saudara/i
+            document.getElementById('messageTemplate').value = `Assalamu'alaikum warahmatullahi wabarakatuh,\nDengan memohon ridha Allah SWT, kami mengundang Bapak/Ibu/Saudara/i\n\n[NAMA]\n\nuntuk hadir dalam acara pernikahan kami.\n\nBerikut undangan digitalnya:\n\nhttps://wittywhale.id/Lina-Rizal/?to=[NAMA_URL]\n\nJazakallahu khairan atas doa dan kehadirannya ${yellowHeart}\nWassalamu'alaikum warahmatullahi wabarakatuh.`;
 
-[NAMA]
-
-untuk hadir dalam acara pernikahan kami.
-
-Berikut undangan digitalnya:
-
-https://wittywhale.id/Lina-Rizal/?to=[NAMA_URL]
-
-Jazakallahu khairan atas doa dan kehadirannya ${yellowHeart}
-Wassalamu'alaikum warahmatullahi wabarakatuh.`;
-
-            fetchFromCloud();
+            // Sinkronisasi data real-time dua arah (onSnapshot)
+            const q = query(guestsCollectionRef, orderBy("timestamp", "asc"));
+            onSnapshot(q, (snapshot) => {
+                globalGuestList = [];
+                snapshot.forEach((doc) => {
+                    let data = doc.data();
+                    globalGuestList.push({
+                        id: doc.id,
+                        name: data.name,
+                        phone: data.phone,
+                        sent: data.sent
+                    });
+                });
+                
+                const statusBadge = document.getElementById('cloudStatusBadge');
+                if(statusBadge) {
+                    statusBadge.className = "text-xs bg-emerald-50 text-emerald-800 p-3 rounded-xl border border-emerald-200 font-medium flex items-center justify-center gap-2";
+                    statusBadge.innerText = "🟢 Firebase Cloud Terhubung Aktif (" + globalGuestList.length + " Tamu)";
+                }
+                
+                renderTable();
+            }, (error) => {
+                console.error("Firebase Connection Error: ", error);
+            });
         };
 
-        // Fungsi Ambil Data dengan Tombol & Proteksi State Visual
-        function fetchFromCloud() {
-            const btn = document.getElementById('btnRefreshCloud');
-            const txt = document.getElementById('textRefreshCloud');
-            
-            // Ubah UI sementara ke mode loading
-            if(btn && txt) {
-                btn.disabled = true;
-                txt.innerText = "Memuat...";
-                btn.classList.add('opacity-60');
+        // Fungsi Tambah Tamu Manual
+        window.addManualGuest = async function() {
+            const nameField = document.getElementById('manualGuestName');
+            const phoneField = document.getElementById('manualGuestPhone');
+            const name = nameField.value.trim();
+            let phone = phoneField.value.trim();
+
+            if (!name || !phone) { alert('Nama dan Nomor HP wajib diisi!'); return; }
+            phone = cleanAndFormatPhone(phone);
+
+            const docId = btoa(encodeURIComponent(name + phone)).replace(/=/g, "");
+
+            try {
+                await setDoc(doc(db, "tamu_undangan", docId), {
+                    name: name,
+                    phone: phone,
+                    sent: false,
+                    timestamp: new Date().getTime()
+                });
+                nameField.value = '';
+                phoneField.value = '';
+            } catch (e) { alert("Gagal menyimpan ke cloud: " + e.message); }
+        };
+
+        // Fungsi Impor Massal CSV
+        window.parseCSV = async function(text) {
+            const lines = text.split(/\r?\n/);
+            if (lines.length < 2) return;
+
+            const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+            const nameIndex = headers.findIndex(h => h.includes('nama'));
+            const phoneIndex = headers.findIndex(h => h.includes('nomor') || h.includes('no') || h.includes('phone') || h.includes('hp'));
+
+            const batch = writeBatch(db);
+            let addedCount = 0;
+
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i].trim()) continue;
+                const row = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                if (row.length < Math.max(nameIndex, phoneIndex) + 1) continue;
+
+                let name = row[nameIndex].replace(/^"|"$/g, '').trim();
+                let rawPhone = row[phoneIndex].replace(/^"|"$/g, '').trim();
+
+                if (name && rawPhone) {
+                    let phone = cleanAndFormatPhone(rawPhone);
+                    const docId = btoa(encodeURIComponent(name + phone)).replace(/=/g, "");
+                    const docRef = doc(db, "tamu_undangan", docId);
+                    
+                    batch.set(docRef, {
+                        name: name,
+                        phone: phone,
+                        sent: false,
+                        timestamp: new Date().getTime() + i
+                    });
+                    addedCount++;
+                }
             }
 
-            const cacheBusterUrl = `${APPS_SCRIPT_URL}?_t=${new Date().getTime()}`;
-            
-            fetch(cacheBusterUrl, {
-                method: "POST",
-                body: JSON.stringify({ action: "get" }),
-                headers: { "Content-Type": "text/plain" }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data && Array.isArray(data)) {
-                    globalGuestList = data;
-                    localStorage.setItem('wedding_guest_list', JSON.stringify(globalGuestList));
-                }
-                renderTable();
-                
-                // Kembalikan UI tombol ke semula
-                if(btn && txt) {
-                    btn.disabled = false;
-                    txt.innerText = "Sinkronkan Cloud";
-                    btn.classList.remove('opacity-60');
-                }
-            })
-            .catch(err => {
-                console.error("Gagal sinkronisasi cloud, fallback ke penyimpanan lokal...", err);
-                const storedData = localStorage.getItem('wedding_guest_list');
-                if (storedData) {
-                    globalGuestList = JSON.parse(storedData);
-                }
-                renderTable();
-                
-                if(btn && txt) {
-                    btn.disabled = false;
-                    txt.innerText = "Sinkronkan Cloud";
-                    btn.classList.remove('opacity-60');
-                }
-            });
-        }
+            try {
+                await batch.commit();
+                alert("Berhasil menambahkan " + addedCount + " tamu massal ke Firebase Cloud!");
+            } catch (e) { alert("Gagal batch upload: " + e.message); }
+        };
 
-        function syncToCloud() {
-            localStorage.setItem('wedding_guest_list', JSON.stringify(globalGuestList));
-            renderTable();
-            
-            fetch(APPS_SCRIPT_URL, {
-                method: "POST",
-                mode: "no-cors",
-                body: JSON.stringify({ action: "sync_all", data: globalGuestList })
-            });
-        }
+        // Toggle Status Standby <--> Terkirim
+        window.toggleStatus = async function(index) {
+            const guest = globalGuestList[index];
+            const newStatus = !guest.sent;
 
-        function updateSingleStatusToCloud(name, phone, sentStatus) {
-            isSyncing = true;
-            fetch(APPS_SCRIPT_URL, {
-                method: "POST",
-                mode: "no-cors",
-                body: JSON.stringify({ action: "update_status", name: name, phone: phone, sent: sentStatus })
-            }).then(() => {
-                isSyncing = false;
-            }).catch(() => {
-                isSyncing = false;
-            });
-        }
+            try {
+                await setDoc(doc(db, "tamu_undangan", guest.id), { sent: newStatus }, { merge: true });
+            } catch (e) { console.error("Gagal update status: ", e); }
+        };
 
-        window.addEventListener('beforeunload', function (e) {
-            if (isSyncing) {
-                e.preventDefault();
-                e.returnValue = 'Data sedang dikirim ke Google Sheets. Apakah Anda yakin ingin keluar?';
-                return e.returnValue;
+        // Hapus Kontak Tunggal
+        window.deleteIndividual = async function(index) {
+            const guest = globalGuestList[index];
+            if(confirm(`Hapus tamu "${guest.name}" dari database cloud?`)) {
+                try {
+                    await deleteDoc(doc(db, "tamu_undangan", guest.id));
+                } catch (e) { console.error("Gagal menghapus dokumen: ", e); }
             }
-        });
+        };
 
-        function toggleStatus(index) {
-            const currentStatus = globalGuestList[index].sent;
-            const newStatus = !currentStatus;
-            
-            globalGuestList[index].sent = newStatus;
-            localStorage.setItem('wedding_guest_list', JSON.stringify(globalGuestList));
-            renderTable();
-
-            updateSingleStatusToCloud(globalGuestList[index].name, globalGuestList[index].phone, newStatus);
-        }
-
-        function deleteIndividual(index) {
-            if(confirm(`Hapus tamu "${globalGuestList[index].name}" dari antrean?`)) {
-                globalGuestList.splice(index, 1);
-                syncToCloud();
+        // Clear All Database
+        window.clearAllData = async function() {
+            if(confirm("PERINGATAN! Ini akan menghapus BERSIH seluruh database tamu di Firebase Cloud secara permanen. Lanjutkan?")) {
+                const batch = writeBatch(db);
+                globalGuestList.forEach((guest) => {
+                    batch.delete(doc(db, "tamu_undangan", guest.id));
+                });
+                try {
+                    await batch.commit();
+                    resetToWelcome();
+                } catch (e) { alert("Gagal reset data: " + e.message); }
             }
-        }
+        };
 
-        function setMode(mode) {
+        // Trigger WhatsApp Link Blast
+        window.sendIndividual = function(index) {
+            const guest = globalGuestList[index];
+            let template = document.getElementById('messageTemplate').value;
+            const nameUrlEncoded = encodeURIComponent(guest.name);
+
+            let finalMessage = template.replace(/\[NAMA\]/g, guest.name).replace(/\[NAMA_URL\]/g, nameUrlEncoded);
+            const waUrl = `https://wa.me/${guest.phone}?text=${encodeURIComponent(finalMessage)}`;
+            
+            setDoc(doc(db, "tamu_undangan", guest.id), { sent: true }, { merge: true });
+
+            window.open(waUrl, '_blank');
+        };
+
+        // UI Helpers
+        window.setMode = function(mode) {
             document.getElementById('welcomeScreen').classList.add('hidden');
             document.getElementById('mainWorkspace').classList.remove('hidden');
             document.body.classList.remove('flex', 'items-center', 'justify-center');
@@ -285,14 +309,14 @@ Wassalamu'alaikum warahmatullahi wabarakatuh.`;
                 document.getElementById('manualInputFields').classList.add('hidden');
             }
             renderTable();
-        }
+        };
 
-        function resetToWelcome() {
+        window.resetToWelcome = function() {
             document.getElementById('fileNameDisplay').innerText = "Pilih File .csv";
             document.getElementById('mainWorkspace').classList.add('hidden');
             document.getElementById('welcomeScreen').classList.remove('hidden');
             document.body.classList.add('flex', 'items-center', 'justify-center');
-        }
+        };
 
         function cleanAndFormatPhone(phone) {
             let cleaned = phone.toString().replace(/[^0-9]/g, ''); 
@@ -300,23 +324,7 @@ Wassalamu'alaikum warahmatullahi wabarakatuh.`;
             return cleaned;
         }
 
-        function addManualGuest() {
-            const nameField = document.getElementById('manualGuestName');
-            const phoneField = document.getElementById('manualGuestPhone');
-            const name = nameField.value.trim();
-            let phone = phoneField.value.trim();
-
-            if (!name || !phone) { alert('Nama dan Nomor HP wajib diisi!'); return; }
-            phone = cleanAndFormatPhone(phone);
-
-            globalGuestList.push({ name, phone, sent: false });
-            nameField.value = '';
-            phoneField.value = '';
-            
-            syncToCloud();
-        }
-
-        function handleFileSelect(event) {
+        window.handleFileSelect = function(event) {
             const file = event.target.files[0];
             if (!file) return;
             document.getElementById('fileNameDisplay').innerText = file.name;
@@ -325,40 +333,7 @@ Wassalamu'alaikum warahmatullahi wabarakatuh.`;
             reader.onload = function(e) { parseCSV(e.target.result); };
             reader.readAsText(file);
             event.target.value = '';
-        }
-
-        function parseCSV(text) {
-            const lines = text.split(/\r?\n/);
-            if (lines.length < 2) return;
-
-            const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
-            const nameIndex = headers.findIndex(h => h.includes('nama'));
-            const phoneIndex = headers.findIndex(h => h.includes('nomor') || h.includes('no') || h.includes('phone') || h.includes('hp'));
-
-            for (let i = 1; i < lines.length; i++) {
-                if (!lines[i].trim()) continue;
-                const row = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                if (row.length < Math.max(nameIndex, phoneIndex) + 1) continue;
-
-                let name = row[nameIndex].replace(/^"|"$/g, '').trim();
-                let rawPhone = row[phoneIndex].replace(/^"|"$/g, '').trim();
-
-                if (name && rawPhone) {
-                    let phone = cleanAndFormatPhone(rawPhone);
-                    globalGuestList.push({ name, phone, sent: false });
-                }
-            }
-            syncToCloud();
-        }
-
-        function clearAllData() {
-            if(confirm("Hapus semua data di aplikasi dan Google Sheets?")) {
-                globalGuestList = [];
-                localStorage.removeItem('wedding_guest_list');
-                syncToCloud();
-                resetToWelcome();
-            }
-        }
+        };
 
         function renderTable() {
             const tbodyDesktop = document.getElementById('guestTableBodyDesktop');
@@ -374,8 +349,8 @@ Wassalamu'alaikum warahmatullahi wabarakatuh.`;
             let standby = 0; let sent = 0;
 
             if (globalGuestList.length === 0) {
-                const emptyHTML = `<div class="p-8 text-center text-amber-600/60 font-medium italic text-sm">Antrean masih kosong.</div>`;
-                tbodyDesktop.innerHTML = `<tr><td colspan="5" class="px-6 py-12 text-center text-amber-600/60 font-medium italic">Antrean masih kosong.</td></tr>`;
+                const emptyHTML = `<div class="p-8 text-center text-amber-600/60 font-medium italic text-sm">Antrean kosong. Database cloud bersih ✨</div>`;
+                tbodyDesktop.innerHTML = `<tr><td colspan="5" class="px-6 py-12 text-center text-amber-600/60 font-medium italic">Antrean kosong.</td></tr>`;
                 containerMobile.innerHTML = emptyHTML;
                 countStandby.innerText = 0; countSent.innerText = 0;
                 return;
@@ -384,7 +359,7 @@ Wassalamu'alaikum warahmatullahi wabarakatuh.`;
             globalGuestList.forEach((guest, index) => {
                 if(guest.sent) { sent++; } else { standby++; }
 
-                // --- DESKTOP VIEW ---
+                // Desktop Layout
                 const tr = document.createElement('tr');
                 tr.className = guest.sent ? "bg-emerald-50/30" : "hover:bg-amber-50/50 transition-colors";
                 tr.innerHTML = `
@@ -401,16 +376,13 @@ Wassalamu'alaikum warahmatullahi wabarakatuh.`;
                             Kirim Sekarang
                         </button>
                         <button onclick="deleteIndividual(${index})" class="px-3 py-2 text-xs font-bold rounded-lg shadow-sm bg-red-50 text-red-600 hover:bg-red-100 border border-red-200 transition transform active:scale-95" title="Hapus">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/>
-                                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/>
-                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/><path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/></svg>
                         </button>
                     </td>
                 `;
                 tbodyDesktop.appendChild(tr);
 
-                // --- MOBILE VIEW ---
+                // Mobile Layout
                 const card = document.createElement('div');
                 card.className = `p-4 rounded-xl border transition-all ${guest.sent ? 'bg-emerald-50/60 border-emerald-100' : 'bg-white border-amber-100/70 shadow-sm'} space-y-3`;
                 card.innerHTML = `
@@ -424,41 +396,17 @@ Wassalamu'alaikum warahmatullahi wabarakatuh.`;
                             ${guest.sent ? 'Terkirim ✓' : 'Standby'}
                         </button>
                     </div>
-                    
                     <div class="flex gap-2 pt-1 border-t border-dashed ${guest.sent ? 'border-emerald-200/50' : 'border-amber-100'}">
                         <button onclick="sendIndividual(${index})" class="flex-1 py-2.5 text-xs font-bold rounded-xl text-white ${guest.sent ? 'bg-emerald-500' : 'bg-amber-500'} flex items-center justify-center gap-1 transition transform active:scale-95">
                             Kirim Sekarang
                         </button>
                         <button onclick="deleteIndividual(${index})" class="px-4 py-2.5 text-xs font-bold rounded-xl bg-red-50 text-red-600 border border-red-100 flex items-center justify-center transition transform active:scale-95">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/>
-                                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/>
-                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/><path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/></svg>
                         </button>
                     </div>
                 `;
                 containerMobile.appendChild(card);
             });
-
-            countStandby.innerText = standby;
-            countSent.innerText = sent;
-        }
-
-        function sendIndividual(index) {
-            const guest = globalGuestList[index];
-            let template = document.getElementById('messageTemplate').value;
-            const nameUrlEncoded = encodeURIComponent(guest.name);
-
-            let finalMessage = template.replace(/\[NAMA\]/g, guest.name).replace(/\[NAMA_URL\]/g, nameUrlEncoded);
-            const waUrl = `https://wa.me/${guest.phone}?text=${encodeURIComponent(finalMessage)}`;
-            
-            globalGuestList[index].sent = true;
-            localStorage.setItem('wedding_guest_list', JSON.stringify(globalGuestList));
-            renderTable();
-
-            updateSingleStatusToCloud(guest.name, guest.phone, true);
-
-            window.open(waUrl, '_blank');
         }
     </script>
 </body>
