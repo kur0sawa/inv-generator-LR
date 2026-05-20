@@ -204,15 +204,15 @@ Wassalamu'alaikum warahmatullahi wabarakatuh.`;
         // Fungsi klik badge status: Ganti visual secara instan, lalu tembak cloud secara senyap
         function toggleStatus(index) {
             const currentStatus = globalGuestList[index].sent;
-            const newStatus = !currentStatus;
+            const newStatus = !currentStatus; // kebalikan dari status sekarang
             
+            // 1. Update data lokal dulu biar cepat secara visual
             globalGuestList[index].sent = newStatus;
             localStorage.setItem('wedding_guest_list', JSON.stringify(globalGuestList));
-            
-            // Render visual di halaman saat itu juga (tanpa interupsi loading)
             renderTable();
 
-            // Tembak cloud secara background job
+            // 2. Kirim data ke Google Sheets secara real-time di latar belakang
+            // Mengirim objek nama, phone, dan boolean status terbaru
             updateSingleStatusToCloud(globalGuestList[index].name, globalGuestList[index].phone, newStatus);
         }
 
